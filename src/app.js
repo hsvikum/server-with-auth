@@ -34,7 +34,15 @@ app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
-app.configure(socketio());
+app.configure(socketio(function(io) {
+    io.on('connection', (socket) => {
+        socket.on('disconnect', (reason) => {
+          if(socket.feathers.user && socket.feathers.user._id) {
+            app.service('users').remove(socket.feathers.user._id);
+          }
+        });
+      });
+}));
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
