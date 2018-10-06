@@ -1,0 +1,4 @@
+{
+  "host": "server-with-auth-app.feathersjs.com",
+  "port": "PORT"
+}
