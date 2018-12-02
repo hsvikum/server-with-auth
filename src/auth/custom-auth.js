@@ -5,7 +5,9 @@ module.exports = opts => {
       const verifier = async (req, done) => {
 
         const user = await this.service(opts.userService).create({
-          "name": req.body.name
+          "name": req.body.name,
+          "active": false,
+          "createdAt": Date.now()
         });
   
         // authenticate the request with this user
