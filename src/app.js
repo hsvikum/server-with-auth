@@ -19,6 +19,7 @@ const channels = require('./channels');
 const authentication = require('./authentication');
 
 const app = express(feathers());
+const roundRobin = require("./services/round_robin/round_robin.js");
 
 // Load app configuration
 app.configure(configuration());
@@ -38,7 +39,24 @@ app.configure(socketio(function(io) {
     io.on('connection', (socket) => {
         socket.on('disconnect', (reason) => {
           if(socket.feathers.user && socket.feathers.user._id) {
-            app.service('users').remove(socket.feathers.user._id);
+            let userId = socket.feathers.user._id;
+            let user = socket.feathers.user;
+            if (socket.feathers.user.active !== false) {
+              socket.feathers.user.active = Date.now() - 3600000;
+              app.service('users').update(userId, user).then(function(){
+                roundRobin(app);
+                // timeout to let round robin to switch to next user
+                setTimeout(function() {
+                  app.service('users').remove(userId).then(function() {
+                    console.log("active user delete success");
+                  }, function() {
+                    console.log("active user delete error");
+                  });
+                },1000);
+              });
+            } else {
+              app.service('users').remove(userId);
+            }
           }
         });
       });
