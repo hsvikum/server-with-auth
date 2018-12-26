@@ -25,7 +25,6 @@ module.exports = function (app) {
                       users[0].active = Date.now();
                       nextUser = users[0]
                   }
-                  console.log(nextUser);
                   currentUser.active = false;
                   app.service('users').update(currentUser._id, currentUser);
                   break;
