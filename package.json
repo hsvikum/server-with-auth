@@ -41,6 +41,7 @@
     "cors": "^2.8.4",
     "feathers-nedb": "^3.1.0",
     "helmet": "^3.13.0",
+    "mqtt": "^2.18.8",
     "nedb": "^1.8.0",
     "passport-custom": "^1.0.5",
     "serve-favicon": "^2.5.0",

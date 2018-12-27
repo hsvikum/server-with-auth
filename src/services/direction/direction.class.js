@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-vars */
+var mqtt = require('mqtt')
+var client  = mqtt.connect('mqtt://mosquitto')
+
 class Service {
   constructor (options) {
     this.options = options || {};
@@ -15,10 +18,7 @@ class Service {
   }
 
   async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-
+    client.publish('direction', data.direction);
     return data;
   }
 
